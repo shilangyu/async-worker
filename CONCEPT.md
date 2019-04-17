@@ -1,0 +1,96 @@
+# async worker concept
+
+```ts
+type AsyncWorker = {
+	task<T>(): (task: () => T) => T
+	spawn(): (process: (thread: SpawnedWorker) => void | fs.PathLike) => SpawnedWorker
+}
+
+type SpawnedWorker = {
+	terminate(): () => void
+	on(): (eventName: string, callback: (data: any) => void) => SpawnedWorker
+	off(): (eventName: string, callback: (data: any) => void) => boolean
+	ask(): (questionName: string, data: any) => Promise<any>
+	emit(): (eventName: string, data: any) => void
+}
+```
+
+### single task
+
+used for fast one-task actions that might take a long time to compute, will be terminated automatically right after finishing the task
+
+```ts
+async function compute() {
+	const result = await asyncWorker.task(() => {
+		console.log('im computing big data that would otherwise block the main thread')
+		/* performing task */
+		return computedData
+	})
+}
+```
+
+### spawn worker
+
+used for a long-term background process. Either runs a function or a file
+
+```ts
+const worker = asyncWorker.spawn(() => {
+	setInterval(async () => {
+		const res = await fetch('https://url')
+		/* doing something */
+	}, 20000) // a task that runs periodically in the background
+})
+
+// once done using, terminate
+worker.terminate()
+```
+
+### listen to the worker and emition
+
+used for loose event listeners
+
+```ts
+enum Listeners {
+	newData,
+	endMe
+}
+
+const worker = asyncWorker.spawn(thread => {
+	setInterval(async () => {
+		const res = await fetch('https://url')
+		thread.emit(Listeners.newData, res) // send message about having some data ready
+	}, 20000) // a task that runs periodically in the background
+
+	setTimeout(() => thread.emit(Listeners.endMe, 'i had enough'), 100000) // sends a termination request in 100s
+})
+
+// create listeners
+worker
+	.on(Listeners.newData, data => console.log('thanks for the data'))
+	.on(Listeners.endMe, data => worker.terminate())
+```
+
+### turn off listening to a worker
+
+used to unsubscribe to an event
+
+```ts
+enum Listeners {
+	newData,
+	endMe
+}
+
+const worker = asyncWorker.spawn(thread => {
+	setInterval(async () => {
+		const res = await fetch('https://url')
+		thread.emit(Listeners.newData, res)
+	}, 20000) // a task that runs periodically in the background
+
+	setTimeout(() => thread.emit(Listeners.endMe, 'i had enough'), 100000) // sends a termination request in 100s
+})
+
+// create listener
+const event = data => console.log('thanks for the data')
+worker.on(Listeners.newData, event)
+worker.off(Listeners.endMe, event) // to turn off an event you must use the same event
+```
