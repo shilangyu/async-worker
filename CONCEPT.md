@@ -11,6 +11,7 @@ type SpawnedWorker = {
 	on(): (eventName: string, callback: (data: any) => void) => SpawnedWorker
 	off(): (eventName: string, callback: (data: any) => void) => boolean
 	ask(): (questionName: string, data: any) => Promise<any>
+	question(): (questionName: string, callback: (data: any) => any) => void
 	emit(): (eventName: string, data: any) => void
 }
 ```
@@ -93,4 +94,27 @@ const worker = asyncWorker.spawn(thread => {
 const event = data => console.log('thanks for the data')
 worker.on(Listeners.newData, event)
 worker.off(Listeners.endMe, event) // to turn off an event you must use the same event
+```
+
+### ask the worker a question
+
+used to get data right away and accept questions
+
+```ts
+const worker = asyncWorker.spawn(thread => {
+		const counter = 0
+
+		thread.question('how many times did you fetch?', () => counter)
+
+		setInterval(async () => {
+			const res = await fetch('https://url')
+			counter++
+		}, 20000) // a task that runs periodically in the background
+	})
+
+	// ask question
+;(async () => {
+	const answer = await worker.ask('how many times did you fetch?', {})
+	console.log(`The worker fetched ${answer} times!`)
+})()
 ```
