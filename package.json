@@ -1,0 +1,20 @@
+{
+	"name": "async-worker",
+	"version": "1.0.0",
+	"description": "Async worker for javascripts that unlocks true asynchronous programming",
+	"main": "./dist/index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shilangyu/async-worker.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/shilangyu/async-worker/issues"
+	},
+	"homepage": "https://github.com/shilangyu/async-worker#readme"
+}
