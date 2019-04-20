@@ -2,7 +2,7 @@
 
 ```ts
 type AsyncWorker = {
-	task<T>(): (task: () => T) => T
+	task<T>(): (task: () => T | CookedTask) => T
 	spawn(): (process: (thread: SpawnedWorker) => void | fs.PathLike) => SpawnedWorker
 }
 
@@ -14,6 +14,8 @@ type SpawnedWorker = {
 	question(): (questionName: string, callback: (data: any) => any) => void
 	emit(): (eventName: string, data: any) => void
 }
+
+type CookedTask = any
 ```
 
 ### single task
@@ -28,6 +30,26 @@ async function compute() {
 		return computedData
 	})
 }
+```
+
+### cooked task
+
+calling a task is expensive. If you plan on creating a similar task often you should cook your function
+
+```ts
+const asyncFibo = asyncWorker.cook(n => {
+	let [first, second] = [0, 1]
+
+	if (n < 0) return NaN
+	if (n === 1) return 0
+	if (n === 2) return 1
+
+	while (--n) [first, second] = [second, first + second]
+
+	return first
+}) // you just created a asynchronous function
+
+asyncFibo(5).then(res => console.log(`5th fibonnaci number is ${res}`))
 ```
 
 ### spawn worker
