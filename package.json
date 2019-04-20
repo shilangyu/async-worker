@@ -21,6 +21,9 @@
 		"@types/escodegen": "^0.0.6",
 		"@types/esprima": "^4.0.2",
 		"@types/estraverse": "^0.0.6",
+		"@types/node": "^11.13.6",
+		"@types/webpack": "^4.4.27",
+		"ts-node": "^8.1.0",
 		"webpack": "^4.30.0",
 		"webpack-cli": "^3.3.0"
 	},
