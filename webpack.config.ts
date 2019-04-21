@@ -4,8 +4,10 @@ import { Configuration } from 'webpack'
 const config: Configuration = {
 	entry: './dist/index.js',
 	output: {
-		filename: 'bundle.js',
-		path: path.resolve(__dirname, 'dist')
+		filename: 'asyncWorker.browser.js',
+		path: path.resolve(__dirname, 'dist'),
+		library: 'asyncWorker',
+		libraryTarget: 'umd'
 	},
 	mode: 'production'
 }
