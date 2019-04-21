@@ -25,6 +25,7 @@
 		"@types/node": "^11.13.6",
 		"@types/webpack": "^4.4.27",
 		"ts-node": "^8.1.0",
+		"typescript": "^3.4.2",
 		"webpack": "^4.30.0",
 		"webpack-cli": "^3.3.0"
 	},
