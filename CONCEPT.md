@@ -18,20 +18,6 @@ type SpawnedWorker = {
 type CookedTask = any
 ```
 
-### single task
-
-used for fast one-task actions that might take a long time to compute, will be terminated automatically right after finishing the task
-
-```ts
-async function compute() {
-	const result = await asyncWorker.task(() => {
-		console.log('im computing big data that would otherwise block the main thread')
-		/* performing task */
-		return computedData
-	})
-}
-```
-
 ### cooked task
 
 calling a task is expensive. If you plan on creating a similar task often you should cook your function
