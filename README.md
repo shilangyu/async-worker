@@ -2,9 +2,34 @@
 
 Async worker for javascripts that unlocks true asynchronous programming
 
-- [task](#task)
+- [installing](#installing)
+- [API](#API)
+  - [task](#task)
 
-### task
+### installing
+
+Install from npm:
+
+```sh
+npm i --save async-worker
+```
+
+`asyncWorker` supports node and the browser. Depending on what is your target import accordingly:
+
+```ts
+import * as asyncWorker from 'async-worker/web' // target web
+import * as asyncWorker from 'async-worker/node' // target node
+```
+
+Alternatively use the embeded script tag (`asyncWorker` will be available globally):
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/async-worker/dist/asyncWorker.web.js"></script>
+```
+
+### API
+
+#### task
 
 To perform a long, expensive tasks outside of the main thread use `asyncWorker.task`
 
