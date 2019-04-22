@@ -2,7 +2,7 @@
 	"name": "async-worker",
 	"version": "1.0.0",
 	"description": "Async worker for javascripts that unlocks true asynchronous programming",
-	"main": "./dist/index.js",
+	"main": "./dist",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "tsc && webpack"
