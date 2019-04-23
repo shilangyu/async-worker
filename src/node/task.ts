@@ -21,8 +21,12 @@ export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): P
 			worker.terminate()
 		})
 
-		worker.on('error', e => {
-			reject(e.message)
+		worker.on('error', (err: Error | string) => {
+			if (typeof err === 'string' && err.includes('DataCloneError')) {
+				reject(new TypeError('DataCloneError: Your task function returns a non-transferable value'))
+			} else {
+				reject(err)
+			}
 			worker.terminate()
 		})
 	})
