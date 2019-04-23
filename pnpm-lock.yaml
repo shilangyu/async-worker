@@ -11,8 +11,6 @@ devDependencies:
   '@types/webpack': 4.4.27
   husky: 1.3.1
   jest: 24.7.1
-  jsdom-worker: 0.1.0
-  node-fetch: 2.3.0
   ts-jest: 24.0.2
   ts-node: 8.1.0
   typescript: 3.4.2
@@ -2916,15 +2914,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-peZUwuWi3rXyAdls77yoDA7y9RM=
-  /jsdom-worker/0.1.0:
-    dependencies:
-      mitt: 1.1.3
-      uuid-v4: 0.1.0
-    dev: true
-    peerDependencies:
-      node-fetch: '*'
-    resolution:
-      integrity: sha512-z6oWOGRrWifRZ+twujJgzpkSQEtq3b0BoUpdryuvH7mRuyjVdqgRYwQ/kfBXOL47FWsz9ZVpUFjjI8wLAIui7Q==
   /jsdom/11.12.0:
     dependencies:
       abab: 2.0.0
@@ -3290,10 +3279,6 @@ packages:
       node: '>=4.0.0'
     resolution:
       integrity: sha512-x471SsVjUtBRtcvd4BzKE9kFC+/2TeWgKCgw0bZcw1b9l2X3QX5vCWgF+KaZaYm87Ss//rHnWryupDrgLvmSkA==
-  /mitt/1.1.3:
-    dev: true
-    resolution:
-      integrity: sha512-mUDCnVNsAi+eD6qA0HkRkwYczbLHJ49z17BGe2PYRhZL4wpZUFZGJHU7/5tmvohoma+Hdn0Vh/oJTiPEmgSruA==
   /mixin-deep/1.3.1:
     dependencies:
       for-in: 1.0.2
@@ -3364,12 +3349,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
-  /node-fetch/2.3.0:
-    dev: true
-    engines:
-      node: 4.x || >=6.0.0
-    resolution:
-      integrity: sha512-MOd8pV3fxENbryESLgVIeaGKrdl+uaYhCSSVkjeOb/31/njTpcis5aWfdqgNlHIrKOLRbMnfPINPOML2CIFeXA==
   /node-int64/0.4.0:
     dev: true
     resolution:
@@ -4802,10 +4781,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-HShAsny+zS2TZfaXxD9tYj4HQGlBezXZMZuM/S5PKLLoZkShZiGk9o5CzukI1LVHZvjdvZ2Sj1aW/Ndn2NB/HQ==
-  /uuid-v4/0.1.0:
-    dev: true
-    resolution:
-      integrity: sha1-YtezEEBvbOz+oVKMafHo4LzsWjo=
   /uuid/3.3.2:
     dev: true
     hasBin: true
@@ -5067,8 +5042,6 @@ specifiers:
   estraverse: ^4.2.0
   husky: ^1.3.1
   jest: ^24.7.1
-  jsdom-worker: ^0.1.0
-  node-fetch: ^2.3.0
   ts-jest: ^24.0.2
   ts-node: ^8.1.0
   typescript: ^3.4.2
