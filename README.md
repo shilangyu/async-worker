@@ -6,6 +6,7 @@ Async worker for javascripts that unlocks true asynchronous programming
 - [API](#API)
   - [task](#task)
   - [cook](#cook)
+  - [fresh](#fresh)
 - [common mistakes](#common-mistakes)
 
 ### installing
@@ -58,7 +59,7 @@ const primes = await asyncWorker.task(
 To cook a function into an asynchronous one use `asyncWorker.task`
 
 ```ts
-export declare function cook<T, S extends any[], U extends any[]>(
+function cook<T, S extends any[], U extends any[]>(
 	func: (...args: S) => (...args: U) => T,
 	...args: S
 ): (...args: U) => Promise<T>
@@ -82,6 +83,15 @@ const res = await asyncFibo(5)
 console.log(`5th fibonnaci number is ${res}`)
 //...
 ```
+
+#### fresh
+
+`asyncWorker`'s methods work in one seperate thread, therefore calling for example `asyncWorker.task` multiple times one after another will stack them up and run them one after another in `asyncWorker`'s thread. If you wish them to truly work in parallel use the `asyncWorker.fresh[name]` property where `name` is the function you wish to call.
+
+Supported functions:
+
+- [task](#task)
+- [cook](#cook)
 
 ### common mistakes
 
