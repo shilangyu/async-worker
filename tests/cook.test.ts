@@ -89,6 +89,16 @@ describe('node implementation of the cook function for both fresh and global', (
 		)
 
 		each(
+			'should reject if it accepts a non-transferable: $name',
+			async ({ cook }: { cook: typeof fresh.cook }) => {
+				let wasError = false
+				await cook(() => b => 1)(() => 1).catch(err => (wasError = true))
+
+				expect(wasError).toBeTruthy()
+			}
+		)
+
+		each(
 			'should reject if there was an internal error: $name',
 			async ({ cook }: { cook: typeof fresh.cook }) => {
 				let wasError = false
