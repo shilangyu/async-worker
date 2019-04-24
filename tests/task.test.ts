@@ -1,61 +1,85 @@
-import { task } from '../src/node'
+import { task, fresh } from '../src/node'
 
-describe('node implementation of the task function', () => {
-	it('should resolve the computed value', async () => {
-		const result = await task(() => {
-			let a = 5
-			a -= 1
-			const b = 12
+describe('node implementation of the task function for both fresh and global', () => {
+	const each = test.each`
+		name        | task
+		${'fresh'}  | ${fresh.task}
+		${'global'} | ${task}
+	`
 
-			var c = 1
+	each(
+		'should resolve the computed value: $name',
+		async ({ task }: { task: typeof fresh.task }) => {
+			const result = await task(() => {
+				let a = 5
+				a -= 1
+				const b = 12
 
-			return b / a + c
-		})
+				var c = 1
 
-		expect(result).toBe(4)
-	})
+				return b / a + c
+			})
 
-	it('should resolve the computed value with passed args', async () => {
-		const result = await task(d => {
-			let a = 5
-			a -= 1
-			const b = 12
+			expect(result).toBe(4)
+		}
+	)
 
-			var c = 1
+	each(
+		'should resolve the computed value with passed args: $name',
+		async ({ task }: { task: typeof fresh.task }) => {
+			const result = await task(d => {
+				let a = 5
+				a -= 1
+				const b = 12
 
-			return b / a + c - d
-		}, 5)
+				var c = 1
 
-		expect(result).toBe(-1)
-	})
+				return b / a + c - d
+			}, 5)
 
-	it('should reject if passed parameter is not a function', async () => {
-		let wasError = false
-		await task(5 as any).catch(err => (wasError = true))
+			expect(result).toBe(-1)
+		}
+	)
 
-		expect(wasError).toBeTruthy()
-	})
+	each(
+		'should reject if passed parameter is not a function: $name',
+		async ({ task }: { task: typeof fresh.task }) => {
+			let wasError = false
+			await task(5 as any).catch(err => (wasError = true))
 
-	it('should reject if passed args are non-transferable', async () => {
-		let wasError = false
-		let res = await task(a => a(), () => 1).catch(err => (wasError = true))
+			expect(wasError).toBeTruthy()
+		}
+	)
 
-		expect(wasError).toBeTruthy()
-	})
+	each(
+		'should reject if passed args are non-transferable: $name',
+		async ({ task }: { task: typeof fresh.task }) => {
+			let wasError = false
+			let res = await task(a => a(), () => 1).catch(err => (wasError = true))
 
-	it('should reject if it returns a non-transferable', async () => {
-		let wasError = false
-		await task(() => () => 1).catch(err => (wasError = true))
+			expect(wasError).toBeTruthy()
+		}
+	)
 
-		expect(wasError).toBeTruthy()
-	})
+	each(
+		'should reject if it returns a non-transferable: $name',
+		async ({ task }: { task: typeof fresh.task }) => {
+			let wasError = false
+			await task(() => () => 1).catch(err => (wasError = true))
 
-	it('should reject if there was an internal error', async () => {
-		let wasError = false
-		await task(() => {
-			throw 'err'
-		}).catch(err => (wasError = true))
+			expect(wasError).toBeTruthy()
+		}
+	)
 
-		expect(wasError).toBeTruthy()
-	})
+	each(
+		'should reject if there was an internal error: $name',
+		async ({ task }: { task: typeof fresh.task }) => {
+			let wasError = false
+			await task(() => {
+				throw 'err'
+			}).catch(err => (wasError = true))
+
+			expect(wasError).toBeTruthy()
+		}
+	)
 })
