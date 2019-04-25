@@ -1,6 +1,8 @@
-# async-worker
+<p align="center">
+	<img src="./asyncWorker.svg"> 
+</p>
 
-Async worker for javascripts that unlocks true asynchronous programming
+✨ Enhance your asynchronous web development by sprinkling parallel code execution! ✨
 
 - [installing](#installing)
 - [API](#API)
