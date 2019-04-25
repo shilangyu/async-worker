@@ -1,8 +1,10 @@
-<p align="center">
-	<img src="./asyncWorker.svg"> 
+<p style="text-align: center;">
+	<img src="./asyncWorker.svg">
 </p>
 
+<p style="text-align: center;">
 ✨ Enhance your asynchronous web development by sprinkling parallel code execution! ✨
+</p>
 
 - [installing](#installing)
 - [API](#API)
