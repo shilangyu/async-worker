@@ -125,7 +125,7 @@ const primes = await asyncWorker.task(
 //...
 ```
 
-Some types are not [transferable](https://developer.mozilla.org/en-US/docs/Web/API/Transferable). Meaning you cannot send them to or recieve from a web worker. Notably functions are not transderable. The following will **not** work:
+Some types are not [transferable](https://developer.mozilla.org/en-US/docs/Web/API/Transferable). Meaning you cannot send them to or recieve from a web worker. Notably functions are not transferable. The following will **not** work:
 
 ```ts
 //...
