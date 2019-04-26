@@ -72,12 +72,9 @@ function cook<T, S extends any[], U extends any[]>(
 ```ts
 //...
 const asyncFibo = asyncWorker.cook(() => n => {
+	if (n <= 0) return NaN
+
 	let [first, second] = [0, 1]
-
-	if (n < 0) return NaN
-	if (n === 1) return 0
-	if (n === 2) return 1
-
 	while (--n) [first, second] = [second, first + second]
 
 	return first
