@@ -1,105 +1,23 @@
-# async worker concept
+### track
+
+used for tracking progress on a long task
 
 ```ts
-type AsyncWorker = {
-	spawn(): (process: (thread: SpawnedWorker) => void | fs.PathLike) => SpawnedWorker
-}
-
-type SpawnedWorker = {
-	terminate(): () => void
-	on(): (eventName: string, callback: (data: any) => void) => SpawnedWorker
-	off(): (eventName: string, callback: (data: any) => void) => boolean
-	ask(): (questionName: string, data: any) => Promise<any>
-	question(): (questionName: string, callback: (data: any) => any) => void
-	emit(): (eventName: string, data: any) => void
-}
-```
-
-### spawn worker
-
-used for a long-term background process. Either runs a function or a file
-
-```ts
-const worker = asyncWorker.spawn(() => {
-	setInterval(async () => {
-		const res = await fetch('https://url')
-		/* doing something */
-	}, 20000) // a task that runs periodically in the background
+const track = asyncWorker.track(tick => {
+	let i = 1000000
+	let result
+	while (--i) {
+		if (i % 1000) tick(i / 1000000)
+		// calculating
+	}
+	return result
 })
 
-// once done using, terminate
-worker.terminate()
-```
-
-### listen to the worker and emition
-
-used for loose event listeners
-
-```ts
-enum Listeners {
-	newData,
-	endMe
-}
-
-const worker = asyncWorker.spawn(thread => {
-	setInterval(async () => {
-		const res = await fetch('https://url')
-		thread.emit(Listeners.newData, res) // send message about having some data ready
-	}, 20000) // a task that runs periodically in the background
-
-	setTimeout(() => thread.emit(Listeners.endMe, 'i had enough'), 100000) // sends a termination request in 100s
+// manage ticks coming in
+track.tick(progress => {
+	console.log(`it is ${progress * 100}% done`)
 })
 
-// create listeners
-worker
-	.on(Listeners.newData, data => console.log('thanks for the data'))
-	.on(Listeners.endMe, data => worker.terminate())
-```
-
-### turn off listening to a worker
-
-used to unsubscribe to an event
-
-```ts
-enum Listeners {
-	newData,
-	endMe
-}
-
-const worker = asyncWorker.spawn(thread => {
-	setInterval(async () => {
-		const res = await fetch('https://url')
-		thread.emit(Listeners.newData, res)
-	}, 20000) // a task that runs periodically in the background
-
-	setTimeout(() => thread.emit(Listeners.endMe, 'i had enough'), 100000) // sends a termination request in 100s
-})
-
-// create listener
-const event = data => console.log('thanks for the data')
-worker.on(Listeners.newData, event)
-worker.off(Listeners.endMe, event) // to turn off an event you must use the same event
-```
-
-### ask the worker a question
-
-used to get data right away and accept questions
-
-```ts
-const worker = asyncWorker.spawn(thread => {
-		const counter = 0
-
-		thread.question('how many times did you fetch?', () => counter)
-
-		setInterval(async () => {
-			const res = await fetch('https://url')
-			counter++
-		}, 20000) // a task that runs periodically in the background
-	})
-
-	// ask question
-;(async () => {
-	const answer = await worker.ask('how many times did you fetch?', {})
-	console.log(`The worker fetched ${answer} times!`)
-})()
+// manage the result that will eventually come
+track.result.then(console.log).catch(console.error)
 ```
