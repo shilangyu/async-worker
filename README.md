@@ -46,7 +46,6 @@ function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): Promise<
 ```
 
 ```ts
-//...
 const primes = await asyncWorker.task(
 	(from, to) => {
 		let computedPrimes = []
@@ -56,7 +55,6 @@ const primes = await asyncWorker.task(
 	10,
 	1000000
 )
-//...
 ```
 
 #### cook
@@ -71,7 +69,6 @@ function cook<T, S extends any[], U extends any[]>(
 ```
 
 ```ts
-//...
 const asyncFibo = asyncWorker.cook(() => n => {
 	if (n <= 0) return NaN
 
@@ -83,7 +80,6 @@ const asyncFibo = asyncWorker.cook(() => n => {
 
 const res = await asyncFibo(5)
 console.log(`5th fibonnaci number is ${res}`)
-//...
 ```
 
 #### track
