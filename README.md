@@ -61,7 +61,7 @@ const primes = await asyncWorker.task(
 
 #### cook
 
-To cook a function into an asynchronous one use `asyncWorker.task`
+To cook a function into an asynchronous one use `asyncWorker.cook`
 
 ```ts
 function cook<T, S extends any[], U extends any[]>(
