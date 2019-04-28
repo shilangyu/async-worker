@@ -67,3 +67,50 @@ export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): P
 		worker.postMessage(args)
 	})
 }
+
+export function track<T, S extends any[]>(
+	func: (tick: (progress: number) => void, ...args: S) => T,
+	...args: S
+): { result: Promise<T>; tick: (ticker: (progress: number) => void) => void } {
+	if (typeof func !== 'function') {
+		throw new TypeError('Passed parameter is not a function')
+	}
+
+	let inTicker: (progress: number) => void
+
+	const worker = new Worker(
+		URL.createObjectURL(
+			new Blob([
+				`
+				const tick = progress => postMessage({ progress })
+
+				onmessage = ({data: args}) => postMessage((${func})(tick, ...args))
+				`
+			])
+		)
+	)
+
+	const result = new Promise<T>((resolve, reject) => {
+		worker.onmessage = ({ data }) => {
+			if (data.progress !== undefined) {
+				if (inTicker) inTicker(data.progress)
+			} else {
+				resolve(data as T)
+				worker.terminate()
+			}
+		}
+
+		worker.onerror = error => {
+			reject(error)
+			worker.terminate()
+		}
+	})
+
+	const tick = (ticker: (progress: number) => void) => {
+		inTicker = ticker
+	}
+
+	worker.postMessage(args)
+
+	return { result, tick }
+}

@@ -10,6 +10,7 @@
 - [API](#API)
   - [task](#task)
   - [cook](#cook)
+  - [track](#track)
   - [fresh](#fresh)
 - [common mistakes](#common-mistakes)
 
@@ -85,6 +86,35 @@ console.log(`5th fibonnaci number is ${res}`)
 //...
 ```
 
+#### track
+
+To track progress of a task use `asyncWorker.track`
+
+```ts
+function track<T, S extends any[]>(
+	func: (tick: (progress: number) => void, ...args: S) => T,
+	...args: S
+): {
+	result: Promise<T>
+	tick: (ticker: (progress: number) => void) => void
+}
+```
+
+```ts
+const tracker = asyncWorker.track((tick, n) => {
+	let fact = 1
+	for (let i = 1; i <= n; i++) {
+		fact *= i
+		tick(i / n)
+	}
+	return fact
+}, 15)
+
+tracker.tick(progress => console.log(`the factorial is ${progress * 100}% done!`))
+
+console.log(`the result is ${await tracker.result}`)
+```
+
 #### fresh
 
 `asyncWorker`'s methods work in one seperate thread, therefore calling for example `asyncWorker.task` multiple times one after another will stack them up and run them one after another in `asyncWorker`'s thread. If you wish them to truly work in parallel use the `asyncWorker.fresh[name]` property where `name` is the function you wish to call.
@@ -93,6 +123,7 @@ Supported functions:
 
 - [task](#task)
 - [cook](#cook)
+- [track](#track)
 
 ### common mistakes
 

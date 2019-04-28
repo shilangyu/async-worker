@@ -72,3 +72,51 @@ export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): P
 		})
 	})
 }
+
+export function track<T, S extends any[]>(
+	func: (tick: (progress: number) => void, ...args: S) => T,
+	...args: S
+): { result: Promise<T>; tick: (ticker: (progress: number) => void) => void } {
+	if (typeof func !== 'function') {
+		throw new TypeError('Passed parameter is not a function')
+	}
+
+	let inTicker: (progress: number) => void
+
+	const worker = new Worker(
+		`
+			const { workerData: args, parentPort } = require('worker_threads')
+
+			const tick = progress => parentPort.postMessage({ progress })
+
+			parentPort.postMessage((${func})(tick, ...args))
+		`,
+		{ workerData: args, eval: true }
+	)
+
+	const result = new Promise<T>((resolve, reject) => {
+		worker.on('message', (data: any) => {
+			if (data.progress !== undefined) {
+				if (inTicker) inTicker(data.progress)
+			} else {
+				resolve(data as T)
+				worker.terminate()
+			}
+		})
+
+		worker.on('error', (error: Error | string) => {
+			if (typeof error === 'string' && error.includes('DataCloneError')) {
+				reject(new TypeError('DataCloneError: Your task function returns a non-transferable value'))
+			} else {
+				reject(error)
+			}
+			worker.terminate()
+		})
+	})
+
+	const tick = (ticker: (progress: number) => void) => {
+		inTicker = ticker
+	}
+
+	return { result, tick }
+}

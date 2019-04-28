@@ -4,6 +4,7 @@ import { randomBytes } from 'crypto'
 interface Froms<T> {
 	task: T
 	cook: T
+	track: T
 }
 
 interface MessageData {
@@ -31,6 +32,12 @@ const resultStream: Froms<Streamer> = {
 		emit: (result: any) => resultStream.cook.collect(result),
 		collect: (result: any) => result,
 		throw: (error: any) => resultStream.cook.catch(error),
+		catch: (error: any) => error
+	},
+	track: {
+		emit: (result: any) => resultStream.track.collect(result),
+		collect: (result: any) => result,
+		throw: (error: any) => resultStream.track.catch(error),
 		catch: (error: any) => error
 	}
 }
@@ -64,6 +71,17 @@ const workerEnv = () => {
 				}
 				break
 
+			case 'track':
+				try {
+					const tick = (progress: number) => parentPort.postMessage({ __from, progress })
+
+					const result = new Function('return (' + funcStr + ')')()(tick, ...args)
+					parentPort.postMessage({ __from, result })
+				} catch (error) {
+					parentPort.postMessage({ __from, error })
+				}
+				break
+
 			default:
 				break
 		}
@@ -74,9 +92,11 @@ let worker: Worker
 function restartWorker() {
 	worker = new Worker(`(${workerEnv})()`, { eval: true })
 
-	worker.on('message', ({ __from, result, error }) => {
+	worker.on('message', ({ __from, result, error, progress }) => {
 		// @ts-ignore
-		if (error) resultStream[__from].throw(error)
+		if (progress !== undefined) resultStream[__from].emit({ progress })
+		// @ts-ignore
+		else if (error) resultStream[__from].throw(error)
 		// @ts-ignore
 		else resultStream[__from].emit(result)
 	})
@@ -161,4 +181,41 @@ export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): P
 			resultStream.task.throw(error)
 		}
 	})
+}
+
+export function track<T, S extends any[]>(
+	func: (tick: (progress: number) => void, ...args: S) => T,
+	...args: S
+): { result: Promise<T>; tick: (ticker: (progress: number) => void) => void } {
+	if (typeof func !== 'function') {
+		throw new TypeError('Passed parameter is not a function')
+	}
+
+	let inTicker: (progress: number) => void
+
+	const result = new Promise<T>((resolve, reject) => {
+		resultStream.track.collect = (data: any) => {
+			if (data.progress !== undefined) {
+				if (inTicker) inTicker(data.progress)
+			} else {
+				resolve(data as T)
+			}
+		}
+
+		resultStream.track.catch = (error: Error | string) => {
+			if (typeof error === 'string' && error.includes('DataCloneError')) {
+				reject(new TypeError('DataCloneError: Your task function returns a non-transferable value'))
+			} else {
+				reject(error)
+			}
+		}
+	})
+
+	const tick = (ticker: (progress: number) => void) => {
+		inTicker = ticker
+	}
+
+	worker.postMessage({ __from: 'track', funcStr: func.toString(), args })
+
+	return { result, tick }
 }
