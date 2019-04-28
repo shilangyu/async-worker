@@ -55,7 +55,7 @@ describe('node implementation of the task function for both fresh and global', (
 		'should reject if passed args are non-transferable: $name',
 		async ({ task }: { task: typeof fresh.task }) => {
 			let wasError = false
-			let res = await task(a => a(), () => 1).catch(err => (wasError = true))
+			await task(a => a(), () => 1).catch(err => (wasError = true))
 
 			expect(wasError).toBeTruthy()
 		}
