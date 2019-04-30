@@ -1,11 +1,4 @@
-dependencies:
-  escodegen: 1.11.1
-  esprima: 4.0.1
-  estraverse: 4.2.0
 devDependencies:
-  '@types/escodegen': 0.0.6
-  '@types/esprima': 4.0.2
-  '@types/estraverse': 0.0.6
   '@types/jest': 24.0.11
   '@types/node': 11.13.6
   '@types/webpack': 4.4.27
@@ -338,26 +331,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-XYVgHF2sQ0YblLRMLNPB3CkFMewzFmlDsH/TneZFHUXDlABQgh88uOxuez7ZcXxayLFrqLwtDH1t+FmlFwNZxw==
-  /@types/escodegen/0.0.6:
-    dev: true
-    resolution:
-      integrity: sha1-UjCpznluBCzabwhtvxnyLqMwZZw=
-  /@types/esprima/4.0.2:
-    dependencies:
-      '@types/estree': 0.0.39
-    dev: true
-    resolution:
-      integrity: sha512-DKqdyuy7Go7ir6iKhZ0jUvgt/h9Q5zb9xS+fLeeXD2QSHv8gC6TimgujBBGfw8dHrpx4+u2HlMv7pkYOOfuUqg==
-  /@types/estraverse/0.0.6:
-    dependencies:
-      '@types/estree': 0.0.39
-    dev: true
-    resolution:
-      integrity: sha1-Zp9833KreX5hJfjQD+0z1M8wwiE=
-  /@types/estree/0.0.39:
-    dev: true
-    resolution:
-      integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
   /@types/istanbul-lib-coverage/2.0.0:
     dev: true
     resolution:
@@ -1373,6 +1346,7 @@ packages:
     resolution:
       integrity: sha1-6zkTMzRYd1y4TNGh+uBiEGu4dUU=
   /deep-is/0.1.3:
+    dev: true
     resolution:
       integrity: sha1-s2nW+128E+7PUk+RsHD+7cNXzzQ=
   /default-require-extensions/2.0.0:
@@ -1572,6 +1546,7 @@ packages:
       estraverse: 4.2.0
       esutils: 2.0.2
       optionator: 0.8.2
+    dev: true
     engines:
       node: '>=4.0'
     hasBin: true
@@ -1589,12 +1564,14 @@ packages:
     resolution:
       integrity: sha512-p7VutNr1O/QrxysMo3E45FjYDTeXBy0iTltPFNSqKAIfjDSXC+4dj+qfyuD8bfAXrW/y6lW3O76VaYNPKfpKrg==
   /esprima/3.1.3:
+    dev: true
     engines:
       node: '>=4'
     hasBin: true
     resolution:
       integrity: sha1-/cpRzuYTOJXjyI1TXOSdv/YqRjM=
   /esprima/4.0.1:
+    dev: true
     engines:
       node: '>=4'
     hasBin: true
@@ -1609,11 +1586,13 @@ packages:
     resolution:
       integrity: sha512-64RBB++fIOAXPw3P9cy89qfMlvZEXZkqqJkjqqXIvzP5ezRZjW+lPWjw35UX/3EhUPFYbg5ER4JYgDw4007/DQ==
   /estraverse/4.2.0:
+    dev: true
     engines:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-De4/7TH81GlhjOc0IJn8GvoL2xM=
   /esutils/2.0.2:
+    dev: true
     engines:
       node: '>=0.10.0'
     resolution:
@@ -1747,6 +1726,7 @@ packages:
     resolution:
       integrity: sha1-1RQsDK7msRifh9OnYREGT4bIu/I=
   /fast-levenshtein/2.0.6:
+    dev: true
     resolution:
       integrity: sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
   /fb-watchman/2.0.0:
@@ -3051,6 +3031,7 @@ packages:
     dependencies:
       prelude-ls: 1.1.2
       type-check: 0.3.2
+    dev: true
     engines:
       node: '>= 0.8.0'
     resolution:
@@ -3504,6 +3485,7 @@ packages:
       prelude-ls: 1.1.2
       type-check: 0.3.2
       wordwrap: 1.0.0
+    dev: true
     engines:
       node: '>= 0.8.0'
     resolution:
@@ -3723,6 +3705,7 @@ packages:
     resolution:
       integrity: sha1-AerA/jta9xoqbAL+q7jB/vfgDqs=
   /prelude-ls/1.1.2:
+    dev: true
     engines:
       node: '>= 0.8.0'
     resolution:
@@ -4274,6 +4257,7 @@ packages:
     resolution:
       integrity: sha1-igOdLRAh0i0eoUyA2OpGi6LvP8w=
   /source-map/0.6.1:
+    dev: true
     engines:
       node: '>=0.10.0'
     resolution:
@@ -4671,6 +4655,7 @@ packages:
   /type-check/0.3.2:
     dependencies:
       prelude-ls: 1.1.2
+    dev: true
     engines:
       node: '>= 0.8.0'
     resolution:
@@ -4941,6 +4926,7 @@ packages:
     resolution:
       integrity: sha1-o9XabNXAvAAI03I0u68b7WMFkQc=
   /wordwrap/1.0.0:
+    dev: true
     resolution:
       integrity: sha1-J1hIEIkUVqQXHI0CJkQa3pDLyus=
   /worker-farm/1.6.0:
@@ -5031,15 +5017,9 @@ packages:
     resolution:
       integrity: sha512-kKfnnYkbTfrAdd0xICNFw7Atm8nKpLcLv9AZGEt+kczL/WQVai4e2V6ZN8U/O+iI6WrNuJjNNOyu4zfhl9D3Hg==
 specifiers:
-  '@types/escodegen': ^0.0.6
-  '@types/esprima': ^4.0.2
-  '@types/estraverse': ^0.0.6
   '@types/jest': ^24.0.11
   '@types/node': ^11.13.6
   '@types/webpack': ^4.4.27
-  escodegen: ^1.11.1
-  esprima: ^4.0.1
-  estraverse: ^4.2.0
   husky: ^1.3.1
   jest: ^24.7.1
   ts-jest: ^24.0.2
