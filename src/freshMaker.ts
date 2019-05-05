@@ -1,3 +1,6 @@
+declare const postMessage: (data: any) => void
+declare const onmessage: (callback: (data: any) => void) => void
+
 export function taskMaker(worker: import('./BaseWorker').BaseWorker) {
 	return function<T, S extends any[]>(func: (...args: S) => T, ...args: S): Promise<T> {
 		return new Promise((resolve, reject) => {
@@ -5,6 +8,19 @@ export function taskMaker(worker: import('./BaseWorker').BaseWorker) {
 				reject(new TypeError('Passed parameter is not a function'))
 				return
 			}
+
+			worker.workerFunc = () => {
+				let args: any
+
+				onmessage(data => {
+					if (data.__initialData !== undefined) {
+						args = data.__initialData
+					} else {
+						postMessage(new Function('return (' + data + ')')()(...args))
+					}
+				})
+			}
+
 			worker.start(args)
 
 			worker.onmessage(result => {
@@ -29,6 +45,20 @@ export function cookMaker(worker: import('./BaseWorker').BaseWorker) {
 	): (...args: U) => Promise<T> {
 		if (typeof func !== 'function') {
 			throw new TypeError('Passed parameter is not a function')
+		}
+
+		worker.workerFunc = () => {
+			let slaveFunc: Function
+
+			onmessage(data => {
+				if (data.__initialData !== undefined) {
+					slaveFunc = new Function('return (' + data.__initialData.funcStr + ')')()(
+						...data.__initialData.args
+					)
+				} else {
+					postMessage(slaveFunc(...data))
+				}
+			})
 		}
 
 		worker.start({ args, funcStr: func.toString() })
@@ -56,6 +86,19 @@ export function trackMaker(worker: import('./BaseWorker').BaseWorker) {
 	): { result: Promise<T>; tick: (ticker: (progress: number) => void) => void } {
 		if (typeof func !== 'function') {
 			throw new TypeError('Passed parameter is not a function')
+		}
+
+		worker.workerFunc = () => {
+			const tick = (__progress: number) => postMessage({ __progress })
+			let args: any
+
+			onmessage(data => {
+				if (data.__initialData !== undefined) {
+					args = data.__initialData
+				} else {
+					postMessage(new Function('return (' + data + ')')()(tick, ...args))
+				}
+			})
 		}
 
 		worker.start(args)
