@@ -5,27 +5,51 @@ export enum ENV {
 
 export class BaseWorker {
 	public worker: Worker | import('worker_threads').Worker | null = null
+	private _workerFuncStr: string = ''
 
 	constructor(
 		private SquashedWorker: typeof import('worker_threads').Worker | typeof Worker,
-		public env: ENV,
-		public workerFunc: Function
+		public env: ENV
 	) {}
 
-	start(initialData: any) {
-		const workerStr = `(${this.workerFunc})()`
+	set workerFunc(value: Function) {
+		const rawFuncStr = value.toString()
+		let cookedFuncStr = ''
 
+		this.either(
+			() => {
+				cookedFuncStr = `() => {
+				const { parentPort } = require('worker_threads');
+				${rawFuncStr
+					.replace(/^(\(\) ?=> ?\{|function ?\(\) ?\{)/, '')
+					.replace(/postMessage/g, 'parentPort.postMessage')
+					.replace(/onmessage\(/g, "parentPort.on('message',")}
+				`
+			},
+			() => {
+				cookedFuncStr = rawFuncStr.replace(
+					/onmessage\((\((\w+)\) ?=>|function\((\w+)\))/g,
+					'onmessage = (function({data: $2$3})'
+				)
+			}
+		)
+
+		this._workerFuncStr = `(${cookedFuncStr})()`
+	}
+
+	start(initialData: any) {
 		this.either(
 			worker => {
 				this.worker = worker
-				this.worker = new this.SquashedWorker(workerStr, {
-					workerData: initialData,
+				this.worker = new this.SquashedWorker(this._workerFuncStr, {
 					eval: true
 				})
+
+				this.worker.postMessage({ __initialData: initialData })
 			},
 			worker => {
 				this.worker = worker
-				this.worker = new this.SquashedWorker(URL.createObjectURL(new Blob([workerStr])))
+				this.worker = new this.SquashedWorker(URL.createObjectURL(new Blob([this._workerFuncStr])))
 
 				this.worker.postMessage({ __initialData: initialData })
 			}
