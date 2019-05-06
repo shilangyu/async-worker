@@ -1,5 +1,7 @@
 import { Worker } from 'worker_threads'
 import { randomBytes } from 'crypto'
+import * as globalMaker from '../globalMaker'
+import { BaseWorker, ENV } from '../BaseWorker'
 
 interface Froms<T> {
 	task: T
@@ -49,15 +51,6 @@ const workerEnv = () => {
 
 	parentPort.on('message', ({ __from, funcStr, args, funcId }: MessageData) => {
 		switch (__from) {
-			case 'task':
-				try {
-					const result = new Function('return (' + funcStr + ')')()(...args)
-					parentPort.postMessage({ __from, result })
-				} catch (error) {
-					parentPort.postMessage({ __from, error })
-				}
-				break
-
 			case 'cook':
 				try {
 					if (funcId && args && funcStr) {
@@ -156,32 +149,10 @@ export function cook<T, S extends any[], U extends any[]>(
 	}
 }
 
-export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): Promise<T> {
-	return new Promise((resolve, reject) => {
-		if (typeof func !== 'function') {
-			reject(new TypeError('Passed parameter is not a function'))
-			return
-		}
+globalMaker.init(new BaseWorker(Worker, ENV.node), () => '')
+globalMaker.start()
 
-		resultStream.task.collect = (result: any) => {
-			resolve(result as T)
-		}
-
-		resultStream.task.catch = (error: Error | string) => {
-			if (typeof error === 'string' && error.includes('DataCloneError')) {
-				reject(new TypeError('DataCloneError: Your task function returns a non-transferable value'))
-			} else {
-				reject(error)
-			}
-		}
-
-		try {
-			worker.postMessage({ __from: 'task', funcStr: func.toString(), args })
-		} catch (error) {
-			resultStream.task.throw(error)
-		}
-	})
-}
+export const task = globalMaker.task
 
 export function track<T, S extends any[]>(
 	func: (tick: (progress: number) => void, ...args: S) => T,
