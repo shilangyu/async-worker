@@ -37,23 +37,21 @@ export class BaseWorker {
 		this._workerFuncStr = `(${cookedFuncStr})()`
 	}
 
-	start(initialData: any) {
+	start(initialData?: any) {
 		this.either(
 			worker => {
 				this.worker = worker
 				this.worker = new this.SquashedWorker(this._workerFuncStr, {
 					eval: true
 				})
-
-				this.worker.postMessage({ __initialData: initialData })
 			},
 			worker => {
 				this.worker = worker
 				this.worker = new this.SquashedWorker(URL.createObjectURL(new Blob([this._workerFuncStr])))
-
-				this.worker.postMessage({ __initialData: initialData })
 			}
 		)
+
+		if (initialData !== undefined) this.worker!.postMessage({ __initialData: initialData })
 	}
 
 	onmessage(callback: (data: any) => void) {
