@@ -67,7 +67,7 @@ export function start() {
 	})
 
 	globalWorker.onerror(error => {
-		;['task'].forEach(name => eev.emit(`${name}_reject`, error))
+		;['task', 'cook'].forEach(name => eev.emit(`${name}_reject`, error))
 
 		globalWorker.restart()
 	})
@@ -81,18 +81,18 @@ export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): P
 		}
 
 		function msg(result: any) {
-			resolve(result as T)
 			eev.off('task_resolve', msg)
 			eev.off('task_reject', err)
+			resolve(result as T)
 		}
 		function err(error: any) {
+			eev.off('task_reject', err)
+			eev.off('task_resolve', msg)
 			if (typeof error === 'string' && error.includes('DataCloneError')) {
 				reject(new TypeError('DataCloneError: Your task function returns a non-transferable value'))
 			} else {
 				reject(error)
 			}
-			eev.off('task_reject', err)
-			eev.off('task_resolve', msg)
 		}
 		eev.on('task_resolve', msg)
 		eev.on('task_reject', err)
@@ -103,4 +103,57 @@ export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): P
 			eev.emit('task_reject', error)
 		}
 	})
+}
+
+export function cook<T, S extends any[], U extends any[]>(
+	func: (...args: S) => (...args: U) => T,
+	...args: S
+): (...args: U) => Promise<T> {
+	if (typeof func !== 'function') {
+		throw new TypeError('Passed parameter is not a function')
+	}
+
+	const funcId = randomId()
+
+	function outerErr(error: Error) {
+		eev.off('cook_reject_outer', outerErr)
+
+		throw error
+	}
+	eev.on('cook_reject_outer', outerErr)
+
+	try {
+		globalWorker.postMessage({ __from: 'cook', funcStr: func.toString(), funcId, args })
+	} catch (error) {
+		eev.emit('cook_reject_outer', error)
+	}
+
+	return function(...args: U) {
+		return new Promise((resolve, reject) => {
+			function msg(result: any) {
+				eev.off('cook_resolve', msg)
+				eev.off('cook_reject', err)
+				resolve(result as T)
+			}
+			function err(error: Error | string) {
+				eev.off('cook_resolve', msg)
+				eev.off('cook_reject', err)
+				if (typeof error === 'string' && error.includes('DataCloneError')) {
+					reject(
+						new TypeError('DataCloneError: Your task function returns a non-transferable value')
+					)
+				} else {
+					reject(error)
+				}
+			}
+			eev.on('cook_resolve', msg)
+			eev.on('cook_reject', err)
+
+			try {
+				globalWorker.postMessage({ __from: 'cook', args, funcId })
+			} catch (error) {
+				eev.emit('cook_reject', error)
+			}
+		})
+	}
 }

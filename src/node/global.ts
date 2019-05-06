@@ -104,55 +104,11 @@ function restartWorker() {
 
 restartWorker()
 
-export function cook<T, S extends any[], U extends any[]>(
-	func: (...args: S) => (...args: U) => T,
-	...args: S
-): (...args: U) => Promise<T> {
-	if (typeof func !== 'function') {
-		throw new TypeError('Passed parameter is not a function')
-	}
-
-	const funcId = randomBytes(12).toString('base64')
-
-	resultStream.cook.catch = (error: Error | string) => {
-		throw error
-	}
-
-	try {
-		worker.postMessage({ __from: 'cook', funcStr: func.toString(), funcId, args })
-	} catch (error) {
-		resultStream.cook.throw(error)
-	}
-
-	return function(...args: U) {
-		return new Promise((resolve, reject) => {
-			resultStream.cook.collect = (result: any) => {
-				resolve(result as T)
-			}
-
-			resultStream.cook.catch = (error: Error | string) => {
-				if (typeof error === 'string' && error.includes('DataCloneError')) {
-					reject(
-						new TypeError('DataCloneError: Your task function returns a non-transferable value')
-					)
-				} else {
-					reject(error)
-				}
-			}
-
-			try {
-				worker.postMessage({ __from: 'cook', args, funcId })
-			} catch (error) {
-				resultStream.cook.throw(error)
-			}
-		})
-	}
-}
-
-globalMaker.init(new BaseWorker(Worker, ENV.node), () => '')
+globalMaker.init(new BaseWorker(Worker, ENV.node), () => randomBytes(12).toString('base64'))
 globalMaker.start()
 
 export const task = globalMaker.task
+export const cook = globalMaker.cook
 
 export function track<T, S extends any[]>(
 	func: (tick: (progress: number) => void, ...args: S) => T,
