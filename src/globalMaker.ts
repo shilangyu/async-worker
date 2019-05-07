@@ -77,6 +77,12 @@ export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): P
 		throw new TypeError('Passed parameter is not a function')
 	}
 
+	if (!globalWorker.wasStarted) {
+		throw new Error(
+			'Global asyncWorker was not started. Did you mean to call `asyncWorker.start()` first?'
+		)
+	}
+
 	return new Promise((resolve, reject) => {
 		function msg(result: any) {
 			eev.off('task_resolve', msg)
@@ -109,6 +115,11 @@ export function cook<T, S extends any[], U extends any[]>(
 ): (...args: U) => Promise<T> {
 	if (typeof func !== 'function') {
 		throw new TypeError('Passed parameter is not a function')
+	}
+	if (!globalWorker.wasStarted) {
+		throw new Error(
+			'Global asyncWorker was not started. Did you mean to call `asyncWorker.start()` first?'
+		)
 	}
 
 	const funcId = randomId()
@@ -162,6 +173,11 @@ export function track<T, S extends any[]>(
 ): { result: Promise<T>; tick: (ticker: (progress: number) => void) => void } {
 	if (typeof func !== 'function') {
 		throw new TypeError('Passed parameter is not a function')
+	}
+	if (!globalWorker.wasStarted) {
+		throw new Error(
+			'Global asyncWorker was not started. Did you mean to call `asyncWorker.start()` first?'
+		)
 	}
 
 	let inTicker: (progress: number) => void

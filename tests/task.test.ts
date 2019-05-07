@@ -1,4 +1,4 @@
-import { task, fresh } from '../src/node'
+import { task, fresh, start } from '../src/node'
 
 describe('node implementation of the task function for both fresh and global', () => {
 	const each = test.each`
@@ -6,6 +6,8 @@ describe('node implementation of the task function for both fresh and global', (
 		${'fresh'}  | ${fresh.task}
 		${'global'} | ${task}
 	`
+
+	start()
 
 	each(
 		'should resolve the computed value: $name',

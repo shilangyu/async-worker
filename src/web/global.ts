@@ -9,7 +9,8 @@ globalMaker.init(
 			.toString(36)
 			.substr(2, 9)
 )
-globalMaker.start()
+
+export const start = globalMaker.start
 
 export const task = globalMaker.task
 export const cook = globalMaker.cook

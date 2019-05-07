@@ -1,4 +1,4 @@
-import { cook, fresh } from '../src/node'
+import { cook, fresh, start } from '../src/node'
 
 describe('node implementation of the cook function for both fresh and global', () => {
 	const each = test.each`
@@ -6,6 +6,8 @@ describe('node implementation of the cook function for both fresh and global', (
 		${'fresh'}  | ${fresh.cook}
 		${'global'} | ${cook}
 	`
+
+	start()
 
 	each(
 		'should resolve the computed value: $name',

@@ -1,4 +1,4 @@
-import { track, fresh } from '../src/node'
+import { track, fresh, start } from '../src/node'
 
 describe('node implementation of the track function for both fresh and global', () => {
 	const each = test.each`
@@ -6,6 +6,8 @@ describe('node implementation of the track function for both fresh and global', 
 		${'fresh'}  | ${fresh.track}
 		${'global'} | ${track}
 	`
+
+	start()
 
 	each(
 		'should resolve the computed value: $name',

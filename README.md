@@ -8,6 +8,7 @@
 
 - [installing](#installing)
 - [API](#API)
+  - [start](#start)
   - [task](#task)
   - [cook](#cook)
   - [track](#track)
@@ -36,6 +37,16 @@ Alternatively use the embeded script tag (`asyncWorker` will be available global
 ```
 
 ### API
+
+#### start
+
+Before you use the global `asyncWorker` make sure to start it with:
+
+```ts
+asyncWorker.start()
+```
+
+After that, you can use all of the global functions (not needed for `asyncWorker.fresh` usage).
 
 #### task
 

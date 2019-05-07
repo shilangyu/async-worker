@@ -8,6 +8,7 @@ type ErrorCallback = (error: Error | ErrorEvent) => void
 
 export class BaseWorker {
 	public worker: Worker | import('worker_threads').Worker | null = null
+	public wasStarted = false
 	private _workerFuncStr: string = ''
 	private _messageCallback: MessageCallback | null = null
 	private _errorCallback: ErrorCallback | null = null
@@ -45,6 +46,7 @@ export class BaseWorker {
 
 	start(initialData?: any) {
 		this._initialData = initialData
+		this.wasStarted = true
 
 		this.either(
 			worker => {
