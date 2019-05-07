@@ -67,9 +67,8 @@ export function start() {
 	})
 
 	globalWorker.onerror(error => {
-		;['task', 'cook'].forEach(name => eev.emit(`${name}_reject`, error))
-
 		globalWorker.restart()
+		;['task', 'cook', 'track'].forEach(name => eev.emit(`${name}_reject`, error))
 	})
 }
 
@@ -156,4 +155,51 @@ export function cook<T, S extends any[], U extends any[]>(
 			}
 		})
 	}
+}
+
+export function track<T, S extends any[]>(
+	func: (tick: (progress: number) => void, ...args: S) => T,
+	...args: S
+): { result: Promise<T>; tick: (ticker: (progress: number) => void) => void } {
+	if (typeof func !== 'function') {
+		throw new TypeError('Passed parameter is not a function')
+	}
+
+	let inTicker: (progress: number) => void
+
+	const result = new Promise<T>((resolve, reject) => {
+		function msg(result: any) {
+			if (result.progress !== undefined) {
+				if (inTicker) inTicker(result.progress)
+			} else {
+				eev.off('track_resolve', msg)
+				eev.off('track_reject', err)
+				resolve(result as T)
+			}
+		}
+		function err(error: Error | string) {
+			eev.off('track_resolve', msg)
+			eev.off('track_reject', err)
+			if (typeof error === 'string' && error.includes('DataCloneError')) {
+				reject(new TypeError('DataCloneError: Your task function returns a non-transferable value'))
+			} else {
+				reject(error)
+			}
+		}
+		eev.on('track_resolve', msg)
+		eev.on('track_reject', err)
+	})
+
+	const tick = (ticker: (progress: number) => void) => {
+		inTicker = ticker
+	}
+
+	try {
+		globalWorker.postMessage({ __from: 'track', funcStr: func.toString(), args })
+	} catch (error) {
+		result.catch(() => {})
+		throw error
+	}
+
+	return { result, tick }
 }
