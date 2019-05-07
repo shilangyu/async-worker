@@ -5,9 +5,8 @@ declare const onmessage: (callback: (data: any) => void) => void
 
 let eev: Eev
 let globalWorker: import('./BaseWorker').BaseWorker
-let randomId: () => string
 
-export function init(worker: import('./BaseWorker').BaseWorker, randomIdFunc: () => string) {
+export function init(worker: import('./BaseWorker').BaseWorker) {
 	worker.workerFunc = () => {
 		const slaveFuncs: { [key: string]: Function } = {}
 
@@ -53,7 +52,6 @@ export function init(worker: import('./BaseWorker').BaseWorker, randomIdFunc: ()
 	}
 
 	eev = new Eev()
-	randomId = randomIdFunc
 	globalWorker = worker
 }
 
@@ -126,7 +124,11 @@ export function cook<T, S extends any[], U extends any[]>(
 		)
 	}
 
-	const funcId = randomId()
+	const funcId =
+		'_' +
+		Math.random()
+			.toString(36)
+			.substr(2, 9)
 
 	function outerErr(error: Error) {
 		eev.off('cook_reject_outer', outerErr)
