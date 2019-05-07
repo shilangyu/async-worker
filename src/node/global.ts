@@ -4,8 +4,6 @@ import * as globalMaker from '../globalMaker'
 import { BaseWorker, ENV } from '../BaseWorker'
 
 interface Froms<T> {
-	task: T
-	cook: T
 	track: T
 }
 
@@ -13,7 +11,6 @@ interface MessageData {
 	__from: keyof Froms<any>
 	funcStr: string
 	args: any[]
-	funcId: string
 }
 
 interface Streamer {
@@ -24,18 +21,6 @@ interface Streamer {
 }
 
 const resultStream: Froms<Streamer> = {
-	task: {
-		emit: (result: any) => resultStream.task.collect(result),
-		collect: (result: any) => result,
-		throw: (error: any) => resultStream.task.catch(error),
-		catch: (error: any) => error
-	},
-	cook: {
-		emit: (result: any) => resultStream.cook.collect(result),
-		collect: (result: any) => result,
-		throw: (error: any) => resultStream.cook.catch(error),
-		catch: (error: any) => error
-	},
 	track: {
 		emit: (result: any) => resultStream.track.collect(result),
 		collect: (result: any) => result,
@@ -49,21 +34,8 @@ const workerEnv = () => {
 
 	const slaveFuncs: { [key: string]: Function } = {}
 
-	parentPort.on('message', ({ __from, funcStr, args, funcId }: MessageData) => {
+	parentPort.on('message', ({ __from, funcStr, args }: MessageData) => {
 		switch (__from) {
-			case 'cook':
-				try {
-					if (funcId && args && funcStr) {
-						slaveFuncs[funcId] = new Function('return (' + funcStr + ')')()(...args)
-					} else {
-						const result = slaveFuncs[funcId](...args)
-						parentPort.postMessage({ __from, result })
-					}
-				} catch (error) {
-					parentPort.postMessage({ __from, error })
-				}
-				break
-
 			case 'track':
 				try {
 					const tick = (progress: number) => parentPort.postMessage({ __from, progress })

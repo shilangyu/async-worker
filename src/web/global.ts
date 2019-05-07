@@ -2,8 +2,6 @@ import * as globalMaker from '../globalMaker'
 import { BaseWorker, ENV } from '../BaseWorker'
 
 interface Froms<T> {
-	task: T
-	cook: T
 	track: T
 }
 
@@ -11,7 +9,6 @@ interface MessageData {
 	__from: keyof Froms<any>
 	funcStr: string
 	args: any[]
-	funcId: string
 }
 
 interface Streamer {
@@ -22,18 +19,6 @@ interface Streamer {
 }
 
 const resultStream: Froms<Streamer> = {
-	task: {
-		emit: (result: any) => resultStream.task.collect(result),
-		collect: (result: any) => result,
-		throw: (error: any) => resultStream.task.catch(error),
-		catch: (error: any) => error
-	},
-	cook: {
-		emit: (result: any) => resultStream.cook.collect(result),
-		collect: (result: any) => result,
-		throw: (error: any) => resultStream.cook.catch(error),
-		catch: (error: any) => error
-	},
 	track: {
 		emit: (result: any) => resultStream.track.collect(result),
 		collect: (result: any) => result,
@@ -47,30 +32,8 @@ declare const postMessage: (data: any) => void
 const workerEnv = () => {
 	const slaveFuncs: { [key: string]: Function } = {}
 
-	onmessage = ({ data: { __from, funcStr, args, funcId } }: { data: MessageData }) => {
+	onmessage = ({ data: { __from, funcStr, args } }: { data: MessageData }) => {
 		switch (__from) {
-			case 'task':
-				try {
-					const result = new Function('return (' + funcStr + ')')()(...args)
-					postMessage({ __from, result })
-				} catch (error) {
-					postMessage({ __from, error })
-				}
-				break
-
-			case 'cook':
-				try {
-					if (funcId && args && funcStr) {
-						slaveFuncs[funcId] = new Function('return (' + funcStr + ')')()(...args)
-					} else {
-						const result = slaveFuncs[funcId](...args)
-						postMessage({ __from, result })
-					}
-				} catch (error) {
-					postMessage({ __from, error })
-				}
-				break
-
 			case 'track':
 				try {
 					const tick = (progress: number) => postMessage({ __from, progress })
