@@ -11,8 +11,14 @@
 		"type": "git",
 		"url": "git+https://github.com/shilangyu/async-worker.git"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": [
+		"web-workers",
+		"async-js",
+		"async-worker",
+		"async-functions",
+		"thread-workers"
+	],
+	"author": "Marcin Wojnarowski @shilangyu",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/shilangyu/async-worker/issues"
