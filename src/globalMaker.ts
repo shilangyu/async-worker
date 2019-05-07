@@ -77,7 +77,7 @@ export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): P
 		throw new TypeError('Passed parameter is not a function')
 	}
 
-	if (!globalWorker.wasStarted) {
+	if (!globalWorker.isRunning) {
 		throw new Error(
 			'Global asyncWorker was not started. Did you mean to call `asyncWorker.start()` first?'
 		)
@@ -116,7 +116,7 @@ export function cook<T, S extends any[], U extends any[]>(
 	if (typeof func !== 'function') {
 		throw new TypeError('Passed parameter is not a function')
 	}
-	if (!globalWorker.wasStarted) {
+	if (!globalWorker.isRunning) {
 		throw new Error(
 			'Global asyncWorker was not started. Did you mean to call `asyncWorker.start()` first?'
 		)
@@ -174,7 +174,7 @@ export function track<T, S extends any[]>(
 	if (typeof func !== 'function') {
 		throw new TypeError('Passed parameter is not a function')
 	}
-	if (!globalWorker.wasStarted) {
+	if (!globalWorker.isRunning) {
 		throw new Error(
 			'Global asyncWorker was not started. Did you mean to call `asyncWorker.start()` first?'
 		)
