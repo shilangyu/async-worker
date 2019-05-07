@@ -91,6 +91,7 @@ export class BaseWorker {
 	}
 
 	terminate() {
+		this.isRunning = false
 		this.worker!.terminate()
 	}
 
