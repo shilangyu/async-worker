@@ -73,12 +73,11 @@ export function start() {
 }
 
 export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): Promise<T> {
-	return new Promise((resolve, reject) => {
-		if (typeof func !== 'function') {
-			reject(new TypeError('Passed parameter is not a function'))
-			return
-		}
+	if (typeof func !== 'function') {
+		throw new TypeError('Passed parameter is not a function')
+	}
 
+	return new Promise((resolve, reject) => {
 		function msg(result: any) {
 			eev.off('task_resolve', msg)
 			eev.off('task_reject', err)

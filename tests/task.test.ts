@@ -45,7 +45,11 @@ describe('node implementation of the task function for both fresh and global', (
 		'should reject if passed parameter is not a function: $name',
 		async ({ task }: { task: typeof fresh.task }) => {
 			let wasError = false
-			await task(5 as any).catch(err => (wasError = true))
+			try {
+				task(5 as any)
+			} catch {
+				wasError = true
+			}
 
 			expect(wasError).toBeTruthy()
 		}

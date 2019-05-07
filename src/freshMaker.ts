@@ -3,12 +3,11 @@ declare const onmessage: (callback: (data: any) => void) => void
 
 export function taskMaker(worker: import('./BaseWorker').BaseWorker) {
 	return function<T, S extends any[]>(func: (...args: S) => T, ...args: S): Promise<T> {
-		return new Promise((resolve, reject) => {
-			if (typeof func !== 'function') {
-				reject(new TypeError('Passed parameter is not a function'))
-				return
-			}
+		if (typeof func !== 'function') {
+			throw new TypeError('Passed parameter is not a function')
+		}
 
+		return new Promise((resolve, reject) => {
 			worker.workerFunc = () => {
 				let args: any
 
