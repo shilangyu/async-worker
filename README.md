@@ -9,6 +9,7 @@
 - [installing](#installing)
 - [API](#API)
   - [start](#start)
+  - [stop](#stop)
   - [task](#task)
   - [cook](#cook)
   - [track](#track)
@@ -47,6 +48,16 @@ asyncWorker.start()
 ```
 
 After that, you can use all of the global functions (not needed for `asyncWorker.fresh` usage).
+
+#### stop
+
+Once you're done using, you can stop it
+
+```ts
+asyncWorker.stop()
+```
+
+Calling `start` after a `stop` will not resume the worker, but restart it
 
 #### task
 

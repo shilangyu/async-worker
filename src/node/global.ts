@@ -6,6 +6,7 @@ import { BaseWorker, ENV } from '../BaseWorker'
 globalMaker.init(new BaseWorker(Worker, ENV.node), () => randomBytes(12).toString('base64'))
 
 export const start = globalMaker.start
+export const stop = globalMaker.stop
 
 export const task = globalMaker.task
 export const cook = globalMaker.cook

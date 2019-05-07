@@ -11,6 +11,7 @@ globalMaker.init(
 )
 
 export const start = globalMaker.start
+export const stop = globalMaker.stop
 
 export const task = globalMaker.task
 export const cook = globalMaker.cook

@@ -72,6 +72,10 @@ export function start() {
 	})
 }
 
+export function stop() {
+	globalWorker.terminate()
+}
+
 export function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): Promise<T> {
 	if (typeof func !== 'function') {
 		throw new TypeError('Passed parameter is not a function')
