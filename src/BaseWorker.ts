@@ -3,9 +3,15 @@ export enum ENV {
 	web
 }
 
+type MessageCallback = (data: any) => void
+type ErrorCallback = (error: Error | ErrorEvent) => void
+
 export class BaseWorker {
 	public worker: Worker | import('worker_threads').Worker | null = null
 	private _workerFuncStr: string = ''
+	private _messageCallback: MessageCallback | null = null
+	private _errorCallback: ErrorCallback | null = null
+	private _initialData: any
 
 	constructor(
 		private SquashedWorker: typeof import('worker_threads').Worker | typeof Worker,
@@ -37,26 +43,28 @@ export class BaseWorker {
 		this._workerFuncStr = `(${cookedFuncStr})()`
 	}
 
-	start(initialData: any) {
+	start(initialData?: any) {
+		this._initialData = initialData
+
 		this.either(
 			worker => {
 				this.worker = worker
 				this.worker = new this.SquashedWorker(this._workerFuncStr, {
 					eval: true
 				})
-
-				this.worker.postMessage({ __initialData: initialData })
 			},
 			worker => {
 				this.worker = worker
 				this.worker = new this.SquashedWorker(URL.createObjectURL(new Blob([this._workerFuncStr])))
-
-				this.worker.postMessage({ __initialData: initialData })
 			}
 		)
+
+		if (initialData !== undefined) this.worker!.postMessage({ __initialData: initialData })
 	}
 
-	onmessage(callback: (data: any) => void) {
+	onmessage(callback: MessageCallback) {
+		this._messageCallback = callback
+
 		this.either(
 			worker => {
 				worker.on('message', callback)
@@ -67,7 +75,9 @@ export class BaseWorker {
 		)
 	}
 
-	onerror(callback: (error: Error | ErrorEvent) => void) {
+	onerror(callback: ErrorCallback) {
+		this._errorCallback = callback
+
 		this.either(
 			worker => {
 				worker.on('error', callback)
@@ -80,6 +90,13 @@ export class BaseWorker {
 
 	terminate() {
 		this.worker!.terminate()
+	}
+
+	restart() {
+		this.terminate()
+		this.start(this._initialData)
+		this.onmessage(this._messageCallback!)
+		this.onerror(this._errorCallback!)
 	}
 
 	postMessage(data: any) {

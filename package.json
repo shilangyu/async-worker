@@ -38,5 +38,8 @@
 		"hooks": {
 			"pre-commit": "npm test"
 		}
+	},
+	"dependencies": {
+		"eev": "^0.1.5"
 	}
 }
