@@ -1,4 +1,4 @@
-import { task, fresh, start } from '../src/node'
+import { task, fresh, start } from '../src'
 
 describe('node implementation of the task function for both fresh and global', () => {
 	const each = test.each`
