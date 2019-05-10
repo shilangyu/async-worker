@@ -24,11 +24,10 @@ Install from npm:
 npm i --save async-worker
 ```
 
-`asyncWorker` supports node and the browser. Depending on what is your target import accordingly:
+Import:
 
 ```ts
-import * as asyncWorker from 'async-worker/web' // target web
-import * as asyncWorker from 'async-worker/node' // target node
+import * as asyncWorker from 'async-worker'
 ```
 
 Alternatively use the embeded script tag (`asyncWorker` will be available globally):
