@@ -28,7 +28,6 @@
 	},
 	"homepage": "https://github.com/shilangyu/async-worker#readme",
 	"devDependencies": {
-		"@types/detect-node": "^2.0.0",
 		"@types/jest": "^24.0.11",
 		"@types/node": "^11.13.6",
 		"@types/webpack": "^4.4.27",
@@ -51,7 +50,6 @@
 	},
 	"dependencies": {
 		"anyworker": "^1.1.1",
-		"detect-node": "^2.0.4",
 		"eev": "^0.1.5"
 	},
 	"files": [
