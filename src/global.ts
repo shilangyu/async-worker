@@ -1,13 +1,14 @@
 import Eev from 'eev'
+import Worker from 'anyworker'
 
 declare const postMessage: (data: any) => void
 declare const onmessage: (callback: (data: any) => void) => void
 
 let eev: Eev
-let globalWorker: import('./BaseWorker').BaseWorker
+let globalWorker: Worker
 
-export function init(worker: import('./BaseWorker').BaseWorker) {
-	worker.workerFunc = () => {
+export function start() {
+	globalWorker = new Worker(() => {
 		const slaveFuncs: { [key: string]: Function } = {}
 
 		onmessage(({ __from, funcStr, args, funcId }) => {
@@ -49,14 +50,9 @@ export function init(worker: import('./BaseWorker').BaseWorker) {
 					break
 			}
 		})
-	}
+	})
 
 	eev = new Eev()
-	globalWorker = worker
-}
-
-export function start() {
-	globalWorker.start()
 
 	globalWorker.onmessage(({ __from, result, error, progress }) => {
 		if (progress !== undefined) eev.emit(`${__from}_resolve`, { progress })
