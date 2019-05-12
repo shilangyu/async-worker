@@ -1,4 +1,4 @@
-import { start, task, stop } from '../src'
+import { start, task, stop } from '../../src'
 
 describe('node implementation of the start&stop functions', () => {
 	it('should fail if not started prior', () => {

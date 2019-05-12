@@ -1,4 +1,4 @@
-import { cook, fresh, start } from '../src'
+import { cook, fresh, start } from '../../src'
 
 describe('node implementation of the cook function for both fresh and global', () => {
 	const each = test.each`

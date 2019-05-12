@@ -41,7 +41,10 @@
 	},
 	"jest": {
 		"preset": "ts-jest",
-		"testEnvironment": "node"
+		"testEnvironment": "node",
+		"testPathIgnorePatterns": [
+			"tests/web"
+		]
 	},
 	"husky": {
 		"hooks": {

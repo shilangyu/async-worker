@@ -1,4 +1,4 @@
-import { track, fresh, start } from '../src'
+import { track, fresh, start } from '../../src'
 
 describe('node implementation of the track function for both fresh and global', () => {
 	const each = test.each`
