@@ -49,7 +49,7 @@
 		}
 	},
 	"dependencies": {
-		"anyworker": "^1.1.1",
+		"anyworker": "^1.1.2",
 		"eev": "^0.1.5"
 	},
 	"files": [

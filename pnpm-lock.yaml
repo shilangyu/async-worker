@@ -1,5 +1,5 @@
 dependencies:
-  anyworker: 1.1.1
+  anyworker: 1.1.2
   eev: 0.1.5
 devDependencies:
   '@types/jest': 24.0.11
@@ -619,12 +619,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-5teOsQWABXHHBFP9y3skS5P3d/WfWXpv3FUpy+LorMrNYaT9pI4oLMQX7jzQ2KklNpGpWHzdCXTDT2Y3XGlZBw==
-  /anyworker/1.1.1:
+  /anyworker/1.1.2:
     dependencies:
       detect-node: 2.0.4
     dev: false
     resolution:
-      integrity: sha512-lPPp225XLq8ezFKlHo99wtPHttOiQsordiYm3wOwqbuVdwi+eqOFqdU/jti1j2loiBDpTtJcxRKenTJErPZvsQ==
+      integrity: sha512-vBxqtskr5gbLNqCGisa+P4PIFv0GgWwM6MPkE4wsZEqGgjct9ROoG9me5gAAS++6sSMTzuF4eH4M3pDH3Yhv8A==
   /append-transform/1.0.0:
     dependencies:
       default-require-extensions: 2.0.0
@@ -5037,7 +5037,7 @@ specifiers:
   '@types/jest': ^24.0.11
   '@types/node': ^11.13.6
   '@types/webpack': ^4.4.27
-  anyworker: ^1.1.1
+  anyworker: ^1.1.2
   eev: ^0.1.5
   husky: ^1.3.1
   jest: ^24.7.1
