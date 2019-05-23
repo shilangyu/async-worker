@@ -1,3 +1,8 @@
+[![dependencies Status](https://david-dm.org/shilangyu/async-worker.svg)](https://david-dm.org/shilangyu/async-worker)
+[![Known Vulnerabilities](https://snyk.io/test/github/shilangyu/async-worker/badge.svg?targetFile=package.json)](https://snyk.io/test/github/shilangyu/async-worker?targetFile=package.json)
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/shilangyu/async-worker/issues)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+
 <p align="center">
 	<img src="./asyncWorker.svg">
 </p>
