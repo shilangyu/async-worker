@@ -1,6 +1,6 @@
 {
 	"name": "async-worker",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Async worker for javascripts that unlocks true asynchronous programming",
 	"main": "./dist",
 	"scripts": {
