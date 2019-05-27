@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+		/>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/async-worker/dist/asyncWorker.web.js"></script>
+
+		<title>asyncWorker - task</title>
+
+		<link rel="stylesheet" href="./shared.css" />
+	</head>
+	<body class="cyan lighten-3">
+		<h2 class="center">Let's calculate some primes!</h2>
+		<p class="center">
+			Notice how without the async-worker the page freezes until the primes are calculated. Thanks
+			to asyncWorker we are able to not only unclutter the page but also track progress!
+		</p>
+		<form class="center">
+			<div class="row">
+				<div class="col s12">
+					Range of the primes:
+
+					<div class="input-field inline">
+						<input id="from" type="number" class="validate" name="from" value="1" />
+						<label for="from">From</label>
+					</div>
+					-
+					<div class="input-field inline">
+						<input id="to" type="number" class="validate" name="to" value="10000000" />
+						<label for="to">To</label>
+					</div>
+
+					<label class="input-field inline">
+						<input type="checkbox" class="checkbox-pink" name="withAsyncWorker" />
+						<span>asyncWorker</span>
+					</label>
+
+					<button class="waves-effect waves-light btn-small pink accent-1">find</button>
+				</div>
+			</div>
+		</form>
+
+		<div id="calculated-primes" class="center flow-text"></div>
+
+		<script>
+			const form = document.getElementsByTagName('form')[0]
+			const formdata = () => Object.fromEntries(new FormData(form))
+			const resultNode = document.getElementById('calculated-primes')
+
+			const calcPrimes = (tick, from, to) => {
+				const primes = []
+				let progress = 0
+				nums: for (let curr = from; curr < to; curr++) {
+					if (Math.round((100 * curr) / (to - from)) > progress) {
+						if (tick) tick(++progress / 100)
+					}
+
+					if (curr <= 1) continue
+					if (curr <= 3) {
+						primes.push(curr)
+						continue
+					}
+
+					if (curr % 2 === 0 || curr % 3 === 0) continue
+
+					for (let i = 5; i * i <= curr; i += 6)
+						if (curr % i == 0 || curr % (i + 2) === 0) continue nums
+
+					primes.push(curr)
+				}
+
+				return primes
+			}
+
+			const loading = document.createElement('div')
+			loading.classList = 'progress'
+			loading.innerHTML =
+				'<div id="progress-bar" class="determinate pink accent-1" style="width: 0%"></div>'
+
+			form.addEventListener('submit', async e => {
+				e.preventDefault()
+				let primes
+
+				resultNode.innerHTML = ''
+				form.appendChild(loading)
+
+				if (formdata().withAsyncWorker) {
+					const tracker = asyncWorker.fresh.track(
+						calcPrimes,
+						Number(formdata().from),
+						Number(formdata().to)
+					)
+
+					const progressBar = document.querySelector('#progress-bar')
+					tracker.tick(progress => {
+						progressBar.style = `width: ${progress * 100}%`
+						// console.log(progress)
+					})
+
+					primes = await tracker.result
+				} else {
+					primes = calcPrimes(null, Number(formdata().from), Number(formdata().to))
+				}
+
+				form.removeChild(loading)
+
+				resultNode.innerHTML = `
+					Found ${primes.length} prime numbers!
+					Here are the last ${primes.length < 100 ? primes.length : 100}: <br/>
+					${primes.slice(-100).join(', ')}
+				`
+			})
+		</script>
+	</body>
+</html>

@@ -21,6 +21,8 @@
   - [fresh](#fresh)
 - [common mistakes](#common-mistakes)
 
+[EXAMPLES](https://shilangyu.github.io/async-worker)
+
 ### installing
 
 Install from npm:
