@@ -21,7 +21,7 @@
   - [fresh](#fresh)
 - [common mistakes](#common-mistakes)
 
-[EXAMPLES](https://shilangyu.github.io/async-worker)
+[EXAMPLES](https://shilangyu.github.io/async-worker/)
 
 ### installing
 
