@@ -52,7 +52,8 @@
 
 		<script>
 			const form = document.getElementsByTagName('form')[0]
-			const formdata = () => Object.fromEntries(new FormData(form))
+			const formdata = () =>
+				[...new FormData(form)].reduce((prev, curr) => ({ ...prev, [curr[0]]: curr[1] }), {})
 			const resultNode = document.getElementById('calculated-primes')
 
 			const calcPrimes = (tick, from, to) => {
