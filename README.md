@@ -4,7 +4,7 @@
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 <p align="center">
-	<img src="./asyncWorker.svg">
+	<img src="./asyncWorker.png">
 </p>
 
 <p align="center">
