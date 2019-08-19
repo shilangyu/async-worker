@@ -143,7 +143,7 @@ Because web workers exist in a different thread the passed function does not hav
 //...
 const from = 10
 const to = 1000000
-const primes = await asyncWorker.task(() => {
+const primes = await task(() => {
 	console.log(from) // error during worker runtime: 'from' is not defined
 	console.log(to) // error during worker runtime: 'to' is not defined
 })
@@ -156,7 +156,7 @@ Do instead:
 //...
 const from = 10
 const to = 1000000
-const primes = await asyncWorker.task(
+const primes = await task(
 	(from, to) => {
 		console.log(from) // :)
 		console.log(to) // :)
@@ -172,7 +172,7 @@ Some types are not [transferable](https://developer.mozilla.org/en-US/docs/Web/A
 ```ts
 //...
 const answer = () => 42
-const result = await asyncWorker.task(answer => {
+const result = await task(answer => {
 	// DataCloneError: could not clone '() => 42'
 }, answer)
 //...
@@ -182,7 +182,7 @@ Nor will:
 
 ```ts
 //...
-const func = await asyncWorker.task(() => {
+const func = await task(() => {
 	return () => 42
 	// DataCloneError: could not clone '() => 42'
 })
