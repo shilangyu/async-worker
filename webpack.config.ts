@@ -5,10 +5,11 @@ const config: Configuration = {
 	entry: './dist/index.js',
 	target: 'web',
 	output: {
-		filename: 'asyncWorker.web.js',
+		filename: 'async-worker.web.js',
 		path: path.resolve(__dirname, 'dist'),
-		library: 'asyncWorker',
-		libraryTarget: 'umd'
+		library: 'AsyncWorker',
+		libraryTarget: 'umd',
+		libraryExport: 'default'
 	},
 	mode: 'production'
 }
