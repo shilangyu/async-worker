@@ -13,12 +13,10 @@
 
 - [installing](#installing)
 - [API](#API)
-  - [start](#start)
-  - [stop](#stop)
   - [task](#task)
   - [cook](#cook)
   - [track](#track)
-  - [fresh](#fresh)
+  - [kill](#kill)
 - [common mistakes](#common-mistakes)
 
 [EXAMPLES](https://shilangyu.github.io/async-worker/)
@@ -28,53 +26,31 @@
 Install from npm:
 
 ```sh
-npm i --save async-worker
+npm i async-worker
 ```
 
 Import:
 
 ```ts
-import * as asyncWorker from 'async-worker'
+import AsyncWorker from 'async-worker'
 ```
 
-Alternatively use the embeded script tag (`asyncWorker` will be available globally):
+Alternatively use the embeded script tag (`AsyncWorker` will be available globally):
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/async-worker/dist/asyncWorker.web.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/async-worker/dist/async-worker.web.js"></script>
 ```
 
 ### API
-
-#### start
-
-Before you use the global `asyncWorker` make sure to start it with:
-
-```ts
-asyncWorker.start()
-```
-
-After that, you can use all of the global functions (not needed for `asyncWorker.fresh` usage).
-
-#### stop
-
-Once you're done using, you can stop it
-
-```ts
-asyncWorker.stop()
-```
-
-Calling `start` after a `stop` will not resume the worker, but restart it
 
 #### task
 
 To perform a long, expensive tasks outside of the main thread use `asyncWorker.task`
 
 ```ts
-function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): Promise<T>
-```
+const { task } = new AsyncWorker()
 
-```ts
-const primes = await asyncWorker.task(
+const primes = await task(
 	(from, to) => {
 		let computedPrimes = []
 		// im computing big data that would otherwise block the main thread
@@ -85,19 +61,18 @@ const primes = await asyncWorker.task(
 )
 ```
 
+```ts
+function task<T, S extends any[]>(func: (...args: S) => T, ...args: S): Promise<T>
+```
+
 #### cook
 
 To cook a function into an asynchronous one use `asyncWorker.cook`
 
 ```ts
-function cook<T, S extends any[], U extends any[]>(
-	func: (...args: S) => (...args: U) => T,
-	...args: S
-): (...args: U) => Promise<T>
-```
+const { cook } = new AsyncWorker()
 
-```ts
-const asyncFibo = asyncWorker.cook(() => n => {
+const asyncFibo = cook(() => n => {
 	if (n <= 0) return NaN
 
 	let [first, second] = [0, 1]
@@ -110,22 +85,21 @@ const res = await asyncFibo(5)
 console.log(`5th fibonnaci number is ${res}`)
 ```
 
+```ts
+function cook<T, S extends any[], U extends any[]>(
+	func: (...args: S) => (...args: U) => T,
+	...args: S
+): (...args: U) => Promise<T>
+```
+
 #### track
 
 To track progress of a task use `asyncWorker.track`
 
 ```ts
-function track<T, S extends any[]>(
-	func: (tick: (progress: number) => void, ...args: S) => T,
-	...args: S
-): {
-	result: Promise<T>
-	tick: (ticker: (progress: number) => void) => void
-}
-```
+const { track } = new AsyncWorker()
 
-```ts
-const tracker = asyncWorker.track((tick, n) => {
+const tracker = track((tick, n) => {
 	let fact = 1
 	for (let i = 1; i <= n; i++) {
 		fact *= i
@@ -139,15 +113,27 @@ tracker.tick(progress => console.log(`the factorial is ${progress * 100}% done!`
 console.log(`the result is ${await tracker.result}`)
 ```
 
-#### fresh
+```ts
+function track<T, S extends any[]>(
+	func: (tick: (progress: number) => void, ...args: S) => T,
+	...args: S
+): {
+	result: Promise<T>
+	tick: (ticker: (progress: number) => void) => void
+}
+```
 
-`asyncWorker`'s methods work in one seperate thread, therefore calling for example `asyncWorker.task` multiple times one after another will stack them up and run them one after another in `asyncWorker`'s thread. If you wish them to truly work in parallel use the `asyncWorker.fresh[name]` property where `name` is the function you wish to call.
+#### kill
 
-Supported functions:
+Once you're done using, you can kill it
 
-- [task](#task)
-- [cook](#cook)
-- [track](#track)
+```ts
+const async = new AsyncWorker()
+
+async.task(/* doing something */)
+
+async.kill()
+```
 
 ### common mistakes
 
