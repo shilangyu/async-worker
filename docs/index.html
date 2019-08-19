@@ -10,7 +10,7 @@
 			href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
 		/>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/async-worker/dist/asyncWorker.web.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/async-worker/dist/async-worker.web.js"></script>
 		<title>asyncWorker - task</title>
 
 		<style>
@@ -110,7 +110,7 @@
 				form.appendChild(loading)
 
 				if (formdata().withAsyncWorker) {
-					const tracker = asyncWorker.fresh.track(
+					const tracker = new AsyncWorker().track(
 						calcPrimes,
 						Number(formdata().from),
 						Number(formdata().to)
