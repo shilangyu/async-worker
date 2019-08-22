@@ -40,41 +40,21 @@ describe('node implementation of the cook method', () => {
 	})
 	describe('cooking errors', () => {
 		it('should reject if passed parameter is not a function', async () => {
-			let wasError = false
-			try {
-				cook(5 as any)
-			} catch {
-				wasError = true
-			}
-
-			expect(wasError).toBeTruthy()
+			expect(() => cook(5 as any)).toThrowError()
 		})
 
 		it('should reject if passed args are non-transferable', async () => {
-			let wasError = false
-			try {
-				cook(a => () => a(), () => 1)
-			} catch {
-				wasError = true
-			}
-
-			expect(wasError).toBeTruthy()
+			expect(() => cook(a => () => a(), () => 1)).toThrowError()
 		})
 	})
 
 	describe('cooked function rejects', () => {
 		it('should reject if it returns a non-transferable', async () => {
-			let wasError = false
-			await cook(() => () => () => 1)().catch(err => (wasError = true))
-
-			expect(wasError).toBeTruthy()
+			await expect(cook(() => () => () => 1)()).rejects.toThrowError('DataCloneError')
 		})
 
 		it('should reject if it accepts a non-transferable', async () => {
-			let wasError = false
-			await cook(() => b => 1)(() => 1).catch(err => (wasError = true))
-
-			expect(wasError).toBeTruthy()
+			await expect(cook(() => b => 1)(() => 1)).rejects.toThrowError()
 		})
 
 		it('should reject if there was an internal error', async () => {

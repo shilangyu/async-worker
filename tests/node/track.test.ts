@@ -63,32 +63,15 @@ describe('node implementation of the track method', () => {
 	})
 
 	it('should reject if passed parameter is not a function', async () => {
-		let wasError = false
-		try {
-			track(5 as any)
-		} catch {
-			wasError = true
-		}
-
-		expect(wasError).toBeTruthy()
+		expect(() => track(5 as any)).toThrowError()
 	})
 
 	it('should reject if passed args are non-transferable', async () => {
-		let wasError = false
-		try {
-			track((tick, a) => a(), () => 1)
-		} catch {
-			wasError = true
-		}
-
-		expect(wasError).toBeTruthy()
+		expect(() => track((tick, a) => a(), () => 1)).toThrowError()
 	})
 
 	it('should reject if it returns a non-transferable', async () => {
-		let wasError = false
-		await track(() => () => 1).result.catch(err => (wasError = true))
-
-		expect(wasError).toBeTruthy()
+		await expect(track(() => () => 1).result).rejects.toThrowError()
 	})
 
 	it('should reject if there was an internal error', async () => {

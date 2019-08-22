@@ -33,28 +33,15 @@ describe('node implementation of the task method', () => {
 	})
 
 	it('should reject if passed parameter is not a function', async () => {
-		let wasError = false
-		try {
-			task(5 as any)
-		} catch {
-			wasError = true
-		}
-
-		expect(wasError).toBeTruthy()
+		expect(() => task(5 as any)).toThrowError()
 	})
 
 	it('should reject if passed args are non-transferable', async () => {
-		let wasError = false
-		await task(a => a(), () => 1).catch(err => (wasError = true))
-
-		expect(wasError).toBeTruthy()
+		await expect(task(a => a(), () => 1)).rejects.toThrowError()
 	})
 
 	it('should reject if it returns a non-transferable', async () => {
-		let wasError = false
-		await task(() => () => 1).catch(err => (wasError = true))
-
-		expect(wasError).toBeTruthy()
+		await expect(task(() => () => 1)).rejects.toThrowError()
 	})
 
 	it('should reject if there was an internal error', async () => {
