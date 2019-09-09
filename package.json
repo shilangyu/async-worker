@@ -4,7 +4,7 @@
 	"description": "Async worker for javascripts that unlocks true asynchronous programming",
 	"main": "./dist",
 	"scripts": {
-		"test": "jest --no-cache",
+		"test": "jest --no-cache --forceExit",
 		"build": "tsc && webpack",
 		"prepare": "npm run build",
 		"prepublishOnly": "npm test",
