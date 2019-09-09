@@ -4,7 +4,7 @@ node_js:
 
 before_script:
   - npm i
-  - npm run build
 
 script:
+  - npm run build
   - npm test
