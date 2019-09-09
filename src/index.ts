@@ -9,8 +9,8 @@ export default class {
 	private _eev: Eev
 
 	constructor() {
-		this._worker = new Worker(() => {
-			const slaveFuncs: { [key: string]: Function } = {}
+		this._worker = new Worker(`() => {
+			const slaveFuncs = {}
 
 			onmessage(({ __from, funcStr, args, funcId }) => {
 				switch (__from) {
@@ -38,8 +38,7 @@ export default class {
 
 					case 'track':
 						try {
-							const tick = (progress: number) => postMessage({ __from, progress })
-
+							const tick = progress => postMessage({ __from, progress })
 							const result = new Function('return (' + funcStr + ')')()(tick, ...args)
 							postMessage({ __from, result })
 						} catch (error) {
@@ -51,7 +50,7 @@ export default class {
 						break
 				}
 			})
-		})
+		}` as any)
 
 		this._eev = new Eev()
 
