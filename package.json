@@ -51,7 +51,7 @@
 		}
 	},
 	"dependencies": {
-		"anyworker": "^1.2.0",
+		"anyworker": "^1.2.1",
 		"eev": "^0.1.5"
 	},
 	"files": [
