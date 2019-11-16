@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/shilangyu/async-worker.svg?branch=master)](https://travis-ci.com/shilangyu/async-worker)
+![](https://github.com/shilangyu/async-worker/workflows/async-worker/badge.svg)
 [![dependencies Status](https://david-dm.org/shilangyu/async-worker.svg)](https://david-dm.org/shilangyu/async-worker)
 [![Known Vulnerabilities](https://snyk.io/test/github/shilangyu/async-worker/badge.svg?targetFile=package.json)](https://snyk.io/test/github/shilangyu/async-worker?targetFile=package.json)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/shilangyu/async-worker/issues)
@@ -13,11 +13,11 @@
 </p>
 
 - [installing](#installing)
-- [API](#API)
-  - [task](#task)
-  - [cook](#cook)
-  - [track](#track)
-  - [kill](#kill)
+- [API](#api)
+	- [task](#task)
+	- [cook](#cook)
+	- [track](#track)
+	- [kill](#kill)
 - [common mistakes](#common-mistakes)
 
 [EXAMPLES](https://shilangyu.github.io/async-worker/)
