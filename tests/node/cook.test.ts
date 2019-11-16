@@ -44,13 +44,18 @@ describe('node implementation of the cook method', () => {
 		})
 
 		it('should reject if passed args are non-transferable', async () => {
-			expect(() => cook(a => () => a(), () => 1)).toThrowError()
+			expect(() =>
+				cook(
+					a => () => a(),
+					() => 1
+				)
+			).toThrowError()
 		})
 	})
 
 	describe('cooked function rejects', () => {
 		it('should reject if it returns a non-transferable', async () => {
-			await expect(cook(() => () => () => 1)()).rejects.toThrowError('DataCloneError')
+			expect(cook(() => () => () => 1)()).rejects.toThrowError('DataCloneError')
 		})
 
 		it('should reject if it accepts a non-transferable', async () => {

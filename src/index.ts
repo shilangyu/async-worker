@@ -9,7 +9,8 @@ export default class {
 	private _eev: Eev
 
 	constructor() {
-		this._worker = new Worker(`() => {
+		this._worker = new Worker(
+			`() => {
 			const slaveFuncs = {}
 
 			onmessage(({ __from, funcStr, args, funcId }) => {
@@ -32,6 +33,8 @@ export default class {
 								postMessage({ __from, result })
 							}
 						} catch (error) {
+							if(error.name === 'DataCloneError')
+								error = { name: error.name, message: error.message }
 							postMessage({ __from, error })
 						}
 						break
@@ -50,7 +53,8 @@ export default class {
 						break
 				}
 			})
-		}` as any)
+		}` as any
+		)
 
 		this._eev = new Eev()
 
@@ -148,9 +152,9 @@ export default class {
 				const err = (error: Error | string) => {
 					this._eev.off('cook_resolve', msg)
 					this._eev.off('cook_reject', err)
-					if (typeof error === 'string' && error.includes('DataCloneError')) {
+					if (typeof error !== 'string' && error.name === 'DataCloneError') {
 						reject(
-							new TypeError('DataCloneError: Your task function returns a non-transferable value')
+							new TypeError('DataCloneError: Your cook function returns a non-transferable value')
 						)
 					} else {
 						reject(error)
@@ -196,7 +200,7 @@ export default class {
 				this._eev.off('track_reject', err)
 				if (typeof error === 'string' && error.includes('DataCloneError')) {
 					reject(
-						new TypeError('DataCloneError: Your task function returns a non-transferable value')
+						new TypeError('DataCloneError: Your track function returns a non-transferable value')
 					)
 				} else {
 					reject(error)
