@@ -1,4 +1,4 @@
-![](https://github.com/shilangyu/async-worker/workflows/async-worker/badge.svg)
+[![](https://github.com/shilangyu/async-worker/workflows/async-worker/badge.svg)](https://github.com/shilangyu/async-worker/actions)
 [![dependencies Status](https://david-dm.org/shilangyu/async-worker.svg)](https://david-dm.org/shilangyu/async-worker)
 [![Known Vulnerabilities](https://snyk.io/test/github/shilangyu/async-worker/badge.svg?targetFile=package.json)](https://snyk.io/test/github/shilangyu/async-worker?targetFile=package.json)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/shilangyu/async-worker/issues)
