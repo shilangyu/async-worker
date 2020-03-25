@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-✨ Enhance your asynchronous web development by sprinkling parallel code execution! ✨
+✨ Enhance your asynchronous web/node development by sprinkling parallel code execution! ✨
 </p>
 
 - [installing](#installing)
@@ -20,7 +20,7 @@
 	- [kill](#kill)
 - [common mistakes](#common-mistakes)
 
-[EXAMPLES](https://shilangyu.github.io/async-worker/)
+[DEMO](https://shilangyu.dev/async-worker/)
 
 ### installing
 
@@ -36,7 +36,7 @@ Import:
 import AsyncWorker from 'async-worker'
 ```
 
-Alternatively use the embeded script tag (`AsyncWorker` will be available globally):
+Alternatively use the embedded script tag (`AsyncWorker` will be available globally):
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/async-worker/dist/async-worker.web.js"></script>
@@ -83,7 +83,7 @@ const asyncFibo = cook(() => n => {
 })
 
 const res = await asyncFibo(5)
-console.log(`5th fibonnaci number is ${res}`)
+console.log(`5th fibonacci number is ${res}`)
 ```
 
 ```ts
@@ -138,7 +138,7 @@ async.kill()
 
 ### common mistakes
 
-Because web workers exist in a different thread the passed function does not have access to your current context variables. To pass in variables please add them as additional parameters and accept them in your functions. This will **not** work:
+Because web workers/worker threads exist in a different thread the passed function does not have access to your current context variables. To pass in variables please add them as additional parameters and accept them in your functions. This will **not** work:
 
 ```ts
 //...
@@ -168,7 +168,7 @@ const primes = await task(
 //...
 ```
 
-Some types are not [transferable](https://developer.mozilla.org/en-US/docs/Web/API/Transferable). Meaning you cannot send them to or recieve from a web worker. Notably functions are not transferable. The following will **not** work:
+Some types are not [transferable](https://developer.mozilla.org/en-US/docs/Web/API/Transferable). Meaning you cannot send them to or receive from a web worker. Notably functions are not transferable. The following will **not** work:
 
 ```ts
 //...
