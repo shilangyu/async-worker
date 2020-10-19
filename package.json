@@ -29,7 +29,6 @@
 	"devDependencies": {
 		"@types/jest": "^26.0.0",
 		"@types/node": "^14.0.1",
-		"@types/webpack": "^4.4.27",
 		"husky": "^4.0.0",
 		"jest": "^25.2.0",
 		"ts-jest": "^25.2.1",
