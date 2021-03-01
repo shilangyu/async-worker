@@ -8,18 +8,21 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [11.x, 12.x]
+        node-version: [14.x, 15.x]
 
     steps:
       - uses: actions/checkout@v1
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm build and test
+
+      - name: install yarn
+        run: npm i -g yarn
+
+      - name: build and test
         run: |
-          npx pnpm i
-          npx pnpm run build
-          npx pnpm test
-        env:
-          CI: true
+          yarn install --frozen-lockfile
+          yarn build
+          yarn test
