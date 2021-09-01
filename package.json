@@ -27,7 +27,7 @@
 		"url": "https://github.com/shilangyu/async-worker/issues"
 	},
 	"devDependencies": {
-		"@types/jest": "^26.0.0",
+		"@types/jest": "^27.0.1",
 		"@types/node": "^16.0.0",
 		"husky": "^7.0.0",
 		"jest": "^25.2.0",
