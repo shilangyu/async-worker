@@ -14,13 +14,13 @@
 
 - [installing](#installing)
 - [API](#api)
-	- [task](#task)
-	- [cook](#cook)
-	- [track](#track)
-	- [kill](#kill)
+  - [task](#task)
+  - [cook](#cook)
+  - [track](#track)
+  - [kill](#kill)
 - [common mistakes](#common-mistakes)
 
-[DEMO](https://shilangyu.dev/async-worker/)
+[DEMO](https://github.shilangyu.dev/async-worker/)
 
 ### installing
 
@@ -73,7 +73,7 @@ To cook a function into an asynchronous one use `asyncWorker.cook`
 ```ts
 const { cook } = new AsyncWorker()
 
-const asyncFibo = cook(() => n => {
+const asyncFibo = cook(() => (n) => {
 	if (n <= 0) return NaN
 
 	let [first, second] = [0, 1]
@@ -109,7 +109,7 @@ const tracker = track((tick, n) => {
 	return fact
 }, 15)
 
-tracker.tick(progress => console.log(`the factorial is ${progress * 100}% done!`))
+tracker.tick((progress) => console.log(`the factorial is ${progress * 100}% done!`))
 
 console.log(`the result is ${await tracker.result}`)
 ```
@@ -173,7 +173,7 @@ Some types are not [transferable](https://developer.mozilla.org/en-US/docs/Web/A
 ```ts
 //...
 const answer = () => 42
-const result = await task(answer => {
+const result = await task((answer) => {
 	// DataCloneError: could not clone '() => 42'
 }, answer)
 //...
